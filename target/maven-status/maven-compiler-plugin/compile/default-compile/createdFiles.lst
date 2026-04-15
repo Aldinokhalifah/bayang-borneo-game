@@ -1,1 +1,9 @@
+com\aldino\game\BayangBorneoGame.class
+com\aldino\game\command\Command.class
+com\aldino\game\model\Player.class
+com\aldino\game\model\Room.class
 com\aldino\game\App.class
+com\aldino\game\command\CommandParser.class
+com\aldino\game\util\GameUtils.class
+com\aldino\game\command\CommandType.class
+com\aldino\game\model\Item.class
