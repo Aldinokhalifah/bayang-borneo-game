@@ -25,6 +25,10 @@ public class Player {
         return name;
     }
 
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
     public void addItem(Item item) {
         inventory.add(item);
         System.out.println("Kamu mengambil: " + item.getName());

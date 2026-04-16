@@ -31,6 +31,10 @@ public class Room {
         return description;
     }
 
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
     // menambahkan arah keluar(north, south, east, west)
     public void addExit(String direction, Room room) {
         exits.put(direction.toLowerCase(), room);

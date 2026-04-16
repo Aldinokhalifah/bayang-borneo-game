@@ -60,6 +60,16 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
             </plugin>
+
+            <!-- Exec Plugin untuk menjalankan main class -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.aldino.game.BayangBorneoGame</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
