@@ -110,11 +110,14 @@ public class BayangBorneoGame {
             case GO:
                 goRoom(command);
                 break;
+            case TAKE:
+                takeItem(command);
+                break;
             case LOOK:
                 look();
                 break;
             case INVENTORY:
-                System.out.println("Tas kamu masih kosong.");
+                showInventory();
                 break;
             case QUIT:
                 return true;   // keluar dari game
@@ -125,6 +128,37 @@ public class BayangBorneoGame {
                 System.out.println("Perintah '" + command.getType() + "' belum diimplementasikan.");
         }
         return false;
+    }
+
+    private void takeItem(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Mau mengambil apa? Contoh: take Sekop Berkarat");
+            return;
+        }
+
+        String itemName = command.getSecondWord();
+        Item item = currentRoom.removeItem(itemName);
+
+        if( item == null ) {
+            System.out.println(itemName + " tidak ditemukan di " + currentRoom.getName());
+        } else if(!item.isCanBeTaken()) {
+            System.out.println("Kamu tidak bisa mengambil " + item.getName() + ".");
+            currentRoom.addItem(item); // kembalikan ke ruangan
+        } else {
+            player.addItem(item);
+        }
+    }
+
+    private void showInventory() {
+        System.out.println("\n=== INVENTORY KAMU ===");
+        if (player.getInventory().isEmpty()) {
+            System.out.println("Tas kamu masih kosong.");
+        } else {
+            player.getInventory().forEach(item -> 
+                System.out.println("- " + item.getName() + " : " + item.getDescription())
+            );
+        }
+        System.out.println("Total item: " + player.getInventory().size());
     }
 
     private void look() {

@@ -20,9 +20,18 @@ public class CommandParser {
 
         String[] words = inputLine.toLowerCase().split("\\s+");
 
-
         String firstWord = words[0];
-        String secondWord = (words.length > 1) ? words[1] : null;
+        
+        // Semua kata setelah firstWord digabung menjadi secondWord
+        String secondWord = null;
+        if (words.length > 1) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < words.length; i++) {
+                if (i > 1) sb.append(" ");
+                sb.append(words[i]);
+            }
+            secondWord = sb.toString();
+        }
 
         CommandType type;
         switch (firstWord) {
