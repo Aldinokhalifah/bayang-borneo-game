@@ -6,6 +6,8 @@ import com.aldino.game.model.Item;
 import com.aldino.game.model.Player;
 import com.aldino.game.model.Room;
 
+import com.aldino.game.util.PrintHelp;
+
 public class BayangBorneoGame {
 
     private final CommandParser parser;
@@ -105,7 +107,7 @@ public class BayangBorneoGame {
     private boolean processCommand(Command command) {
         switch (command.getType()) {
             case HELP:
-                printHelp();
+                PrintHelp.displayHelp();
                 break;
             case GO:
                 goRoom(command);
@@ -187,16 +189,6 @@ public class BayangBorneoGame {
             System.out.println("\nKamu berjalan ke " + currentRoom.getName() + "...");
             look();   // tampilkan deskripsi ruangan baru
         }
-    }
-
-    private void printHelp() {
-        System.out.println("\n=== BANTUAN PERINTAH ===");
-        System.out.println("go [arah]    - Bergerak ke arah tertentu (north, south, dll)");
-        System.out.println("look         - Melihat deskripsi ruangan saat ini");
-        System.out.println("take [item]  - Mengambil item");
-        System.out.println("inventory    - Melihat barang di tas");
-        System.out.println("help         - Menampilkan bantuan ini");
-        System.out.println("quit         - Keluar dari game");
     }
 
     public static void main(String[] args) {

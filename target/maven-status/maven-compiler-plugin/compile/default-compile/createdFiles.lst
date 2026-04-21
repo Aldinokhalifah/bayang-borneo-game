@@ -8,3 +8,4 @@ com\aldino\game\util\GameUtils.class
 com\aldino\game\BayangBorneoGame$1.class
 com\aldino\game\command\CommandType.class
 com\aldino\game\model\Item.class
+com\aldino\game\util\PrintHelp.class
