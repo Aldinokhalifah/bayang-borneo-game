@@ -6,8 +6,9 @@ public class PrintHelp {
         System.out.println("go [arah]    - Bergerak ke arah tertentu (north, south, dll)");
         System.out.println("look         - Melihat deskripsi ruangan saat ini");
         System.out.println("take [item]  - Mengambil item");
-        System.out.println("inventory    - Melihat barang di tas");
+        System.out.println("inventory / inv    - Melihat barang di tas");
+        System.out.println("health / hp  - Melihat sisa darah player");
         System.out.println("help         - Menampilkan bantuan ini");
-        System.out.println("quit         - Keluar dari game\n");
+        System.out.println("quit / exit         - Keluar dari game\n");
     }
 }

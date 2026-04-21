@@ -1,5 +1,5 @@
 package com.aldino.game.command;
 
 public enum CommandType {
-    GO, TAKE, LOOK, INVENTORY, HELP, QUIT, UNKNOWN;
+    GO, TAKE, LOOK, INVENTORY, HEALTH, HELP, QUIT, UNKNOWN;
 }

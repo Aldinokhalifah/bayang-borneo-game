@@ -48,6 +48,10 @@ public class CommandParser {
             case "inventory":
                 type = CommandType.INVENTORY;
                 break;
+            case "health":
+            case "hp":
+                type = CommandType.HEALTH;
+                break;
             case "help":
                 type = CommandType.HELP;
                 break;

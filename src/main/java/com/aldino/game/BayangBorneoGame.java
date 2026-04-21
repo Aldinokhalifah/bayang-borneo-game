@@ -5,8 +5,10 @@ import com.aldino.game.command.CommandParser;
 import com.aldino.game.model.Item;
 import com.aldino.game.model.Player;
 import com.aldino.game.model.Room;
-
+import com.aldino.game.util.PrintBadEnding;
+import com.aldino.game.util.PrintGoodEnding;
 import com.aldino.game.util.PrintHelp;
+import com.aldino.game.util.PrintWelcome;
 
 public class BayangBorneoGame {
 
@@ -21,16 +23,7 @@ public class BayangBorneoGame {
 
         createRooms();
 
-        printWelcome();
-    }
-
-    private void printWelcome() {
-        System.out.println("========================================");
-        System.out.println("     BAYANG-BAYANG BORNEO");
-        System.out.println("   Petualangan di Hutan Mistis Kalimantan");
-        System.out.println("========================================");
-        System.out.println("Kamu tersesat di tengah hutan yang gelap...");
-        System.out.println("Ketik 'help' untuk melihat daftar perintah.\n");
+        PrintWelcome.display();
     }
 
     private void createRooms() {
@@ -86,6 +79,7 @@ public class BayangBorneoGame {
         guaCahaya.addItem(new Item("Tulang Belulang", "tulang dari spesies yang tidak diketahui", false));
         templarKuno.addItem(new Item("Kitab Petunjuk", "kitab yang menunjukkan peta menuju suatu tempat tersembunyi"));
         templarKuno.addItem(new Item("Lukisan Kulit Hewan", "lukisan yang dilukis di atas kulit hewan"));
+        templarKuno.addItem(new Item("Sepatu Kulit Hewan", "sepatu yang terbuat dari kulit hewan"));
         templarKuno.addItem(new Item("Furnitur Batu", "tempat dilaksanakannya ibadah", false));
         bukitTinggi.addItem(new Item("Tali Tumbuhan", "dapat digunakan untuk mengikat sesuatu"));
         bukitTinggi.addItem(new Item("Buah Biru", "buah yang dapat dikonsumsi untuk menambahkan tenaga"));
@@ -101,6 +95,11 @@ public class BayangBorneoGame {
         while (!finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+
+            // Cek status game setelah setiap perintah
+            if (!finished) {
+                finished = checkGameStatus();
+            }
         }
     }
 
@@ -120,6 +119,9 @@ public class BayangBorneoGame {
                 break;
             case INVENTORY:
                 showInventory();
+                break;
+            case HEALTH:
+                showHealth();
                 break;
             case QUIT:
                 return true;   // keluar dari game
@@ -148,6 +150,19 @@ public class BayangBorneoGame {
             currentRoom.addItem(item); // kembalikan ke ruangan
         } else {
             player.addItem(item);
+
+            if(item.getName().equals("Kayu Ajaib")) {
+                System.out.println("Selamat! kamu telah menemukan artefak kuno yang bernama: Kayu Ajaib");
+            } else if(item.getName().equals("Kitab Petunjuk")) {
+                System.out.println("Selamat! kamu telah menemukan artefak kuno yang bernama: Kitab Petunjuk");
+            } else if(item.getName().equals("Cawan Kuno")) {
+                System.out.println("Selamat! kamu telah menemukan artefak kuno yang bernama: Cawan Kuno");
+            } else if(item.getName().equals("Buah Biru")) {
+                System.out.println("Kamu memakan buah biru dan merasa energi bertambah");
+                System.out.println("Darah kamu akan bertambah sebanyak: 10");
+                player.heal(10);
+                showHealth();
+            }
         }
     }
 
@@ -161,6 +176,11 @@ public class BayangBorneoGame {
             );
         }
         System.out.println("Total item: " + player.getInventory().size());
+    }
+
+    private void showHealth() {
+        System.out.println("\n=== STATUS PLAYER ===");
+        System.out.println(player.getHealthStatus());
     }
 
     private void look() {
@@ -188,7 +208,58 @@ public class BayangBorneoGame {
             
             System.out.println("\nKamu berjalan ke " + currentRoom.getName() + "...");
             look();   // tampilkan deskripsi ruangan baru
+            checkRoomHazards(); // cek bahaya di ruangan
         }
+    }
+
+    private void checkRoomHazards() {
+        if(currentRoom.getName().equals("Hutan Lebat")) {
+            if(!player.hasItem("Kulit Hewan Besar")) {
+                System.out.println("Kamu tidak memiliki item: Kulit Hewan Besar untuk melindungi diri dari duri");
+                System.out.println("Darah kamu akan berkurang sebanyak: 20");
+                player.takeDamage(20);
+                showHealth();
+            }
+        } else if(currentRoom.getName().equals("Sungai Mistis")) {
+            if(!player.hasItem("Batang Pohon Besar")) {
+                System.out.println("Kamu tidak memiliki item: Batang Pohon Besar untuk melindungi diri dari air yang deras");
+                System.out.println("Darah kamu akan berkurang sebanyak: 10");
+                player.takeDamage(10);
+                showHealth();
+            }
+        } else if(currentRoom.getName().equals("Gua Cahaya")) {
+            if(!player.hasItem("Pisau Batu")) {
+                System.out.println("Kamu tidak memiliki item: Pisau Batu untuk bertahan dari binatang liar yang ada di gua");
+                System.out.println("Darah kamu akan berkurang sebanyak: 15");
+                player.takeDamage(15);
+                showHealth();
+            }
+        } else if(currentRoom.getName().equals("Templar Kuno")) {
+            if(!player.hasItem("Sepatu Kulit Hewan")) {
+                System.out.println("Kamu tidak memiliki item: Sepatu Kulit Hewan akibatnya kamu menginjak batu tajam yang ada di sekitar templar");
+                System.out.println("Darah kamu akan berkurang sebanyak: 25");
+                player.takeDamage(25);
+                showHealth();
+            }
+        }
+    }
+
+    private boolean checkGameStatus() {
+        // Cek Game Over karena health habis
+        if (!player.isAlive()) {
+            PrintBadEnding.display();
+            return true;
+        }
+
+        // Cek Win Condition (contoh: mengumpulkan 3 item penting)
+        if (player.hasItem("Kitab Petunjuk") && 
+            player.hasItem("Cawan Kuno") && 
+            player.hasItem("Kayu Ajaib")) {
+            PrintGoodEnding.display();
+            return true;
+        }
+
+        return false;
     }
 
     public static void main(String[] args) {

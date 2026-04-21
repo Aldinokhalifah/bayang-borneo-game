@@ -11,6 +11,7 @@ public class Player {
 
     private final String name;
     private int health = 100;
+    private int maxHealth = 100;
     
     @Setter
     private Room currentRoom;
@@ -31,6 +32,10 @@ public class Player {
 
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
+    }
+
+    public void heal(int amount) {
+        health = Math.min(maxHealth, health + amount);
     }
 
     public void addItem(Item item) {
@@ -54,5 +59,13 @@ public class Player {
     public String getStatus() {
         return "❤️  Health: " + health + " | Inventory: " + 
             (inventory.isEmpty() ? "kosong" : inventory.size() + " item");
+    }
+
+    public String getHealthBar() {
+        return "❤️".repeat(health / 10) + " (" + health + "/" + maxHealth + ")";
+    }
+
+    public String getHealthStatus() {
+        return "Sisa darah: " + health + "/" + maxHealth;
     }
 }
