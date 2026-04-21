@@ -25,6 +25,10 @@ public class Player {
         return name;
     }
 
+    public List<Item> getInventory() {
+        return inventory;
+    }
+
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
     }
