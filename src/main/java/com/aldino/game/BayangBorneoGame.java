@@ -146,6 +146,7 @@ public class BayangBorneoGame {
 
         String itemName = command.getSecondWord();
         Item item = currentRoom.removeItem(itemName);
+        int heal = 15;
 
         if( item == null ) {
             System.out.println(itemName + " tidak ditemukan di " + currentRoom.getName());
@@ -163,8 +164,8 @@ public class BayangBorneoGame {
                 System.out.println("Selamat! kamu telah menemukan artefak kuno yang bernama: Cawan Kuno");
             } else if(item.getName().equals("Buah Biru")) {
                 System.out.println("Kamu memakan buah biru dan merasa energi bertambah");
-                System.out.println("Darah kamu akan bertambah sebanyak: 10");
-                player.heal(10);
+                System.out.println("Darah kamu akan bertambah sebanyak: " + heal);
+                player.heal(heal);
                 ShowHealth.display(player);
             }
         }
