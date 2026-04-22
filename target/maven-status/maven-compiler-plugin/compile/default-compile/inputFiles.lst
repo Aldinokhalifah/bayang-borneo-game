@@ -6,8 +6,12 @@ C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\jav
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\model\Item.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\model\Player.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\model\Room.java
+C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\CheckGameStatus.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\GameUtils.java
+C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\Look.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\PrintBadEnding.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\PrintGoodEnding.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\PrintHelp.java
 C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\PrintWelcome.java
+C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\ShowHealth.java
+C:\Users\Aldino\OneDrive\Desktop\OneDrive\Java\bayang-bayang-borneo\src\main\java\com\aldino\game\util\ShowInventory.java
