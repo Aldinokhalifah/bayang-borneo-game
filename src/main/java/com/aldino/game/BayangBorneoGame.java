@@ -12,23 +12,29 @@ import com.aldino.game.util.ShowHealth;
 import com.aldino.game.util.ShowInventory;
 import com.aldino.game.util.CheckGameStatus;
 import com.aldino.game.util.Look;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BayangBorneoGame {
 
+    private static final int MAX_SAVE_SLOT = 3;
     private final CommandParser parser;
     private Player player;
     private Room currentRoom;        // ruangan tempat player sekarang
     private Room startRoom;          // ruangan awal game
     private final Map<String, Room> roomsByName;
+    private int activeSaveSlot = 1;
 
     public BayangBorneoGame() {
         this.parser = new CommandParser();
         this.roomsByName = new HashMap<>();
 
         createRooms();
-        loadOrCreatePlayer();
+        chooseStartupProgress();
 
         PrintWelcome.display();
     }
@@ -102,22 +108,107 @@ public class BayangBorneoGame {
         currentRoom = startRoom;
     }
 
-    private void loadOrCreatePlayer() {
-        SaveManager.LoadedGame loadedGame = SaveManager.load(1);
+    private void chooseStartupProgress() {
+        List<Integer> availableSlots = SaveManager.getAvailableSlots(MAX_SAVE_SLOT);
 
-        if (loadedGame == null) {
-            this.player = new Player("Aldino");
-            currentRoom = startRoom;
-            player.setCurrentRoom(currentRoom);
+        if (availableSlots.isEmpty()) {
+            startNewGame(1);
             return;
         }
 
+        System.out.println("Progress ditemukan di slot berikut:");
+        for (Integer slot : availableSlots) {
+            SaveManager.SaveSummary summary = SaveManager.loadSummary(slot);
+            if (summary == null) {
+                continue;
+            }
+            String roomName = (summary.getRoomName() == null || summary.getRoomName().isBlank())
+                    ? startRoom.getName()
+                    : summary.getRoomName();
+            String status = summary.isFinished() ? " [TAMAT]" : "";
+            System.out.println("Slot " + slot
+                    + " | Player: " + summary.getPlayerName()
+                    + " | HP: " + summary.getHealth()
+                    + " | Room: " + roomName
+                    + " | Inventory: " + summary.getInventoryCount() + " item"
+                    + status);
+        }
+        System.out.println("Ketik nomor slot (1-" + MAX_SAVE_SLOT + ") untuk melanjutkan.");
+        System.out.println("Ketik 0 untuk mulai game baru.");
+
+        int selected = promptSlotSelection();
+        if (selected == 0) {
+            int newSlot = promptNewGameSlot();
+            startNewGame(newSlot);
+            return;
+        }
+
+        if (!loadGameFromSlot(selected)) {
+            System.out.println("Slot tidak valid / rusak. Game baru dimulai di slot 1.");
+            startNewGame(1);
+        }
+    }
+
+    private boolean loadGameFromSlot(int slot) {
+        SaveManager.LoadedGame loadedGame = SaveManager.load(slot);
+        if (loadedGame == null) {
+            return false;
+        }
+
+        activeSaveSlot = slot;
         this.player = loadedGame.getPlayer();
         Room loadedRoom = roomsByName.get(loadedGame.getRoomName());
         currentRoom = (loadedRoom != null) ? loadedRoom : startRoom;
         player.setCurrentRoom(currentRoom);
         removeCollectedItemsFromRooms();
-        System.out.println("Progress ditemukan. Data pemain berhasil dimuat.");
+        System.out.println("Progress dari slot " + slot + " berhasil dimuat.");
+        return true;
+    }
+
+    private void startNewGame(int slot) {
+        activeSaveSlot = slot;
+        this.player = new Player("Aldino");
+        currentRoom = startRoom;
+        player.setCurrentRoom(currentRoom);
+        System.out.println("Memulai game baru di slot " + slot + ".");
+    }
+
+    private int promptSlotSelection() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            System.out.print("Pilih slot: ");
+            try {
+                String line = reader.readLine();
+                if (line == null) {
+                    return 0;
+                }
+                int value = Integer.parseInt(line.trim());
+                if (value == 0 || (value >= 1 && value <= MAX_SAVE_SLOT)) {
+                    return value;
+                }
+            } catch (IOException | NumberFormatException ignored) {
+            }
+            System.out.println("Input tidak valid. Masukkan angka 0-" + MAX_SAVE_SLOT + ".");
+        }
+    }
+
+    private int promptNewGameSlot() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (true) {
+            System.out.print("Simpan progress baru di slot (1-" + MAX_SAVE_SLOT + "): ");
+            try {
+                String line = reader.readLine();
+                if (line == null) {
+                    return 1;
+                }
+                int value = Integer.parseInt(line.trim());
+                if (value >= 1 && value <= MAX_SAVE_SLOT) {
+                    return value;
+                }
+            } catch (IOException | NumberFormatException ignored) {
+            }
+            System.out.println("Input tidak valid. Masukkan angka 1-" + MAX_SAVE_SLOT + ".");
+        }
     }
 
     private void removeCollectedItemsFromRooms() {
@@ -268,7 +359,7 @@ public class BayangBorneoGame {
     }
 
     private void autoSave() {
-        SaveManager.save(player, currentRoom.getName(), 1);
+        SaveManager.save(player, currentRoom.getName(), activeSaveSlot);
     }
 
     public static void main(String[] args) {

@@ -6,6 +6,7 @@ com\aldino\game\util\PrintBadEnding.class
 com\aldino\game\command\CommandParser.class
 com\aldino\game\util\Look.class
 com\aldino\game\util\CheckGameStatus.class
+com\aldino\game\system\SaveManager$SaveSummary.class
 com\aldino\game\command\CommandType.class
 com\aldino\game\util\ShowHealth.class
 com\aldino\game\model\Player.class
