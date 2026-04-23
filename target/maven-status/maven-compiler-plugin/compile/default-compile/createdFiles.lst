@@ -1,6 +1,7 @@
 com\aldino\game\util\PrintGoodEnding.class
 com\aldino\game\BayangBorneoGame.class
 com\aldino\game\command\Command.class
+com\aldino\game\system\SaveManager.class
 com\aldino\game\util\PrintBadEnding.class
 com\aldino\game\command\CommandParser.class
 com\aldino\game\util\Look.class
@@ -10,9 +11,11 @@ com\aldino\game\util\ShowHealth.class
 com\aldino\game\model\Player.class
 com\aldino\game\model\Room.class
 com\aldino\game\App.class
+com\aldino\game\system\SaveManager$LoadedGame.class
 com\aldino\game\util\PrintWelcome.class
 com\aldino\game\util\GameUtils.class
 com\aldino\game\util\ShowInventory.class
 com\aldino\game\BayangBorneoGame$1.class
+com\aldino\game\system\SaveManager$SaveData.class
 com\aldino\game\model\Item.class
 com\aldino\game\util\PrintHelp.class

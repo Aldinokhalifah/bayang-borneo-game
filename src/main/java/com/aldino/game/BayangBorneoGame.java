@@ -5,27 +5,30 @@ import com.aldino.game.command.CommandParser;
 import com.aldino.game.model.Item;
 import com.aldino.game.model.Player;
 import com.aldino.game.model.Room;
-import com.aldino.game.util.PrintBadEnding;
-import com.aldino.game.util.PrintGoodEnding;
+import com.aldino.game.system.SaveManager;
 import com.aldino.game.util.PrintHelp;
 import com.aldino.game.util.PrintWelcome;
 import com.aldino.game.util.ShowHealth;
 import com.aldino.game.util.ShowInventory;
 import com.aldino.game.util.CheckGameStatus;
 import com.aldino.game.util.Look;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BayangBorneoGame {
 
     private final CommandParser parser;
-    private final Player player;
+    private Player player;
     private Room currentRoom;        // ruangan tempat player sekarang
     private Room startRoom;          // ruangan awal game
+    private final Map<String, Room> roomsByName;
 
     public BayangBorneoGame() {
         this.parser = new CommandParser();
-        this.player = new Player("Aldino");
+        this.roomsByName = new HashMap<>();
 
         createRooms();
+        loadOrCreatePlayer();
 
         PrintWelcome.display();
     }
@@ -88,9 +91,41 @@ public class BayangBorneoGame {
         bukitTinggi.addItem(new Item("Tali Tumbuhan", "dapat digunakan untuk mengikat sesuatu"));
         bukitTinggi.addItem(new Item("Buah Biru", "buah yang dapat dikonsumsi untuk menambahkan tenaga"));
 
+        roomsByName.put(halamanRumah.getName(), halamanRumah);
+        roomsByName.put(hutanLebat.getName(), hutanLebat);
+        roomsByName.put(sungaiMistis.getName(), sungaiMistis);
+        roomsByName.put(guaCahaya.getName(), guaCahaya);
+        roomsByName.put(templarKuno.getName(), templarKuno);
+        roomsByName.put(bukitTinggi.getName(), bukitTinggi);
+
         startRoom = hutanLebat;
         currentRoom = startRoom;
+    }
+
+    private void loadOrCreatePlayer() {
+        SaveManager.LoadedGame loadedGame = SaveManager.load(1);
+
+        if (loadedGame == null) {
+            this.player = new Player("Aldino");
+            currentRoom = startRoom;
+            player.setCurrentRoom(currentRoom);
+            return;
+        }
+
+        this.player = loadedGame.getPlayer();
+        Room loadedRoom = roomsByName.get(loadedGame.getRoomName());
+        currentRoom = (loadedRoom != null) ? loadedRoom : startRoom;
         player.setCurrentRoom(currentRoom);
+        removeCollectedItemsFromRooms();
+        System.out.println("Progress ditemukan. Data pemain berhasil dimuat.");
+    }
+
+    private void removeCollectedItemsFromRooms() {
+        for (Item item : player.getInventory()) {
+            for (Room room : roomsByName.values()) {
+                room.removeItem(item.getName());
+            }
+        }
     }
 
     public void play() {
@@ -168,6 +203,7 @@ public class BayangBorneoGame {
                 player.heal(heal);
                 ShowHealth.display(player);
             }
+            autoSave();
         }
     }
 
@@ -190,6 +226,7 @@ public class BayangBorneoGame {
             System.out.println("\nKamu berjalan ke " + currentRoom.getName() + "...");
             Look.display(currentRoom);   // tampilkan deskripsi ruangan baru
             checkRoomHazards(); // cek bahaya di ruangan
+            autoSave();
         }
     }
 
@@ -228,6 +265,10 @@ public class BayangBorneoGame {
                 ShowHealth.display(player);
             }
         }
+    }
+
+    private void autoSave() {
+        SaveManager.save(player, currentRoom.getName(), 1);
     }
 
     public static void main(String[] args) {

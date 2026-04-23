@@ -1,7 +1,6 @@
 package com.aldino.game.model;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,21 +8,32 @@ import java.util.List;
 @Getter
 public class Player {
 
-    private final String name;
+    private String name;
     private int health = 100;
     private int maxHealth = 100;
     
-    @Setter
     private Room currentRoom;
 
-    private final List<Item> inventory = new ArrayList<>();
+    private List<Item> inventory = new ArrayList<>();
 
     public Player(String name) {
         this.name = name;
     }
 
+    public Player() {
+        
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public List<Item> getInventory() {
@@ -50,6 +60,13 @@ public class Player {
 
     public void takeDamage(int damage) {
         health = Math.max(0, health - damage);
+    }
+
+    public void restoreState(String name, int health, int maxHealth, List<Item> inventory) {
+        this.name = (name == null || name.isBlank()) ? "Player" : name;
+        this.maxHealth = Math.max(1, maxHealth);
+        this.health = Math.max(0, Math.min(this.maxHealth, health));
+        this.inventory = (inventory == null) ? new ArrayList<>() : new ArrayList<>(inventory);
     }
 
     public boolean isAlive() {

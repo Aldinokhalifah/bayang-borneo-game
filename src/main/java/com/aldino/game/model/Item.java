@@ -2,9 +2,9 @@ package com.aldino.game.model;
 
 public class Item {
 
-    private final String name;
-    private final String description;
-    private final boolean canBeTaken;
+    private String name;
+    private String description;
+    private boolean canBeTaken;
 
     public Item(String name, String description, boolean canBeTaken) {
         this.name = name;
@@ -14,6 +14,10 @@ public class Item {
 
     public Item(String name, String description) {
         this(name, description, true);
+    }
+
+    public Item() {
+        
     }
 
     public String getName() {
