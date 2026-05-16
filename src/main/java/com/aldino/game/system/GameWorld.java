@@ -9,10 +9,11 @@ import com.aldino.game.model.Room;
 public class GameWorld {
     private Room currentRoom;        // ruangan tempat player sekarang
     private Room startRoom;          // ruangan awal game
-    private Map<String, Room> roomsByName = new HashMap<>();
+    private Map<String, Room> roomsByName;
 
-    public GameWorld(Map<String, Room> roomsByName) {
-        this.roomsByName = roomsByName;
+    public GameWorld() {   // tanpa parameter
+        this.roomsByName = new HashMap<>();
+        createRooms();
     }
 
     public void createRooms() {
